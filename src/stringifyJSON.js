@@ -28,15 +28,17 @@ JSON.stringify({[Symbol.for("foo")]: "foo"}, function (k, v) {
 */
 
 var sampleArr = ["pooper", 100, 22, "yellow", true, [57, "pinky"], "true"];
-var sampleObj = {a: {b: "c"}};
-
+var sampleObj = {a: {b: {c: 5}}};
+var sampleObj2 = {"foo":true,"bar":false,"baz":null}
+var sampleObj3 = {"functions":function (){},"undefined":undefined}
+var sampleObj4 = {"a": "apple"}
 
 
 var stringifyJSON = function(obj) {
 
   function permute(elem){
   	if(elem===null) return "null";
-  	if(elem===undefined) return "undefined";
+  	if(elem===undefined) return undefined;
   	if(Array.isArray(elem)){
   		return(buildArray(elem));
   	} else if(typeof(elem)==='object'){
@@ -49,7 +51,6 @@ var stringifyJSON = function(obj) {
   }
 
   function buildArray(arr){
-  	if(arr.length===0) return "[]";
   	var strArr = [];
 		for (var i = 0; i < arr.length; i++) {
 			strArr.push(permute(arr[i]));
@@ -57,31 +58,22 @@ var stringifyJSON = function(obj) {
   	return "["+strArr.toString()+"]";	
   }
 
-  function buildObject(obj){
-  	//need case for handling empty obj {}
-  	strArr = [];
-  		for (var key in obj) {
-  			if(obj.hasOwnProperty(key)){
-  				debug("now working on key "+key+" and value "+obj[key])
-  				strArr.push('"'+key+'":'+permute(obj[key]));
-  			}
-  		}
-  		return "{" + strArr.toString() + "}"; 		
+
+  function buildObject(obj2){
+		if(Object.getOwnPropertyNames(obj).length === 0){
+			return "{}";
+		}
+		var kvArr = [];
+		for (var key in obj2) {
+			if(obj2.hasOwnProperty(key)){
+				if(typeof(obj2[key])!=="function" && typeof(obj2[key])!=="undefined"){
+					kvArr.push('"'+key+'":'+permute(obj2[key]));
+				}
+			}
+		}
+		return "{" + kvArr.toString() + "}";
   }
-
-
-  var result = [];
-  result.push(permute(obj));
-
-  var stringified = result.join(',');
-  //if (stringified[stringified.length-1]===",") stringified = stringified.slice(0,-1);
-  return stringified;
+  
+  return permute(obj).toString();
 };
-
-//debug(stringifyJSON(sampleArr));
-//debug(JSON.stringify(sampleArr));
-debug("my version: " + stringifyJSON(sampleObj));
-debug("official:   " + JSON.stringify(sampleObj));
-
-
 
