@@ -55,7 +55,7 @@ var stringifyJSON = function(obj) {
 		for (var i = 0; i < arr.length; i++) {
 			strArr.push(permute(arr[i]));
 		}
-  	return "["+strArr.toString()+"]";	
+  	return ["[",strArr.toString(),"]"];	
   }
 
 
