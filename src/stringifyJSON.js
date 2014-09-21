@@ -27,50 +27,61 @@ JSON.stringify({[Symbol.for("foo")]: "foo"}, function (k, v) {
 
 */
 
-var sampleObj = [10, 100, 22, "yellow", true, "true"];
-
+var sampleArr = ["pooper", 100, 22, "yellow", true, [57, "pinky"], "true"];
+var sampleObj = {a: {b: "c"}};
 
 
 
 var stringifyJSON = function(obj) {
 
   function permute(elem){
+  	if(elem===null) return "null";
+  	if(elem===undefined) return "undefined";
   	if(Array.isArray(elem)){
-  		result.push("[");
-  		for (var i = 0; i < elem.length; i++) {
-  			permute(elem[i]);
-  		}
-  		result[result.length-1]=result[result.length-1].toString()+"],"; 
+  		return(buildArray(elem));
   	} else if(typeof(elem)==='object'){
-  		result.push("{");
-  		for (var key in elem) {
-  			if(elem.hasOwnProperty(key)){
-  				result.push('"'+key+'":');
-  				permute(elem[j]);
-  			}
-  		}
-  		result[result.length-1]=result[result.length-1].toString()+"},";  		
+  		return(buildObject(elem));
   	} else if(typeof(elem)==='string'){
-  		newstring = '"'+elem+'"';
-  		if(result[result.length-1]==="[" || result[result.length-1]==="{"){
-  			result[result.length-1] = result[result.length-1] + newstring;
-  		} else {
-  			result.push(newstring);
-  		}
+  		return '"'+elem+'"';
   	} else {
-  		if(result[result.length-1]==="[" || result[result.length-1]==="{"){
-  			result[result.length-1] = result[result.length-1] + elem;
-  		} else {
-  			result.push(elem);
-  		}
+  		return(elem);
   	}
   }
 
+  function buildArray(arr){
+  	if(arr.length===0) return "[]";
+  	var strArr = [];
+		for (var i = 0; i < arr.length; i++) {
+			strArr.push(permute(arr[i]));
+		}
+  	return "["+strArr.toString()+"]";	
+  }
+
+  function buildObject(obj){
+  	//need case for handling empty obj {}
+  	strArr = [];
+  		for (var key in obj) {
+  			if(obj.hasOwnProperty(key)){
+  				debug("now working on key "+key+" and value "+obj[key])
+  				strArr.push('"'+key+'":'+permute(obj[key]));
+  			}
+  		}
+  		return "{" + strArr.toString() + "}"; 		
+  }
+
+
   var result = [];
-  permute(obj);
+  result.push(permute(obj));
+
   var stringified = result.join(',');
-  if (stringified[stringified.length-1]===",") stringified = stringified.slice(0,-1);
+  //if (stringified[stringified.length-1]===",") stringified = stringified.slice(0,-1);
   return stringified;
 };
 
-debug(stringifyJSON(sampleObj))
+//debug(stringifyJSON(sampleArr));
+//debug(JSON.stringify(sampleArr));
+debug("my version: " + stringifyJSON(sampleObj));
+debug("official:   " + JSON.stringify(sampleObj));
+
+
+
