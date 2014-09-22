@@ -10,9 +10,30 @@
 // But instead we're going to implement it from scratch:
 var getElementsByClassName = function(className){
   // your code here
-  var classes = classname.split(' ');  // make an array.
+  var targetClasses = classname.split(' ');  // make an array.
   var result = [];
 
+function containsAll(arr1,arr2){
+	for (var i = 0; i < arr1.length; i++) {
+		if(arr2.indexOf(arr1[i])===-1) return false;
+	}
+	return true;
+}
+
+function permute(element){
+  var elemClasses = element.classList();
+  if(containsAll(targetClasses,elemClasses){
+  	result.push(element);
+  }
+  var nodes = element.childNodes();
+  for (var i = 0; i < nodes.length; i++) {
+  	permute(nodes[i]);
+  }
+ };
+ 
+  permute(document);
+
+}
   //iterate through every element on the page.
   // if element.classList contains ALL elements listed in "classes"
   // then append that element to "result."
