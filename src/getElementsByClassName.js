@@ -13,7 +13,6 @@ function getElementsByClassName(className){
     }
 
     function permute(element){
-      cycles = cycles + 1;
       var elemClasses = element.classList;
       if(typeof(elemClasses)!=='undefined'){
         elemClasses = [].slice.call(elemClasses);
