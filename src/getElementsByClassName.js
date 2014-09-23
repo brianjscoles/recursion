@@ -1,9 +1,6 @@
 // duplicates functionality of built-in JS function Node.getElementsByClassName()
 
 function getElementsByClassName(className){
-  
-    var targetClasses = className.split(' ');  // make an array.
-    var result = [];
 
     function containsAll(arr1,arr2){
       for (var i = 0; i < arr1.length; i++) {
@@ -27,7 +24,9 @@ function getElementsByClassName(className){
         }
       }
     };
-
+  
+    var targetClasses = className.split(' ');  // make an array.
+    var result = [];
     permute(document.body);
     return result;
   }
